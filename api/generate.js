@@ -1,5 +1,5 @@
-// api/generate.js
-import { OpenAI } from 'openai';
+
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY // Vercel 대시보드에 환경변수로 등록할 키
