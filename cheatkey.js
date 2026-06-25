@@ -237,12 +237,14 @@ async function ckFetchImagen(promptText) {
 
   //console.log("🚀 [Gemini API 호출 직전 데이터]:\n", JSON.stringify(payload, null, 2));
   const maxRetries = 3;
-  let delay = 1000;
+  let delay = 1000
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(/api/generate,// 이부분 나중에 지피티 이미지(개발모드 gpt-image-1-mini)로 변경 
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
-      );
+      const response = await fetch(/api/generate, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const result = await response.json();
       const base64 = result.predictions?.[0]?.bytesBase64Encoded;
