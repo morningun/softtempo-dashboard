@@ -1,5 +1,5 @@
 // ─── 치트키 생성기 전용 ───
-let ckApiKey = "AQ.-Fw";
+let ckApiKey = "";
 
 
 
@@ -111,8 +111,8 @@ async function ckFetchGemini(userPrompt, systemInstruction) {
   let delay = 1000;
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log("🚀 [Gemini API 호출 직전 최종 데이터]:\n", JSON.stringify(payload, null, 2));
-      /*const response = await fetch(
+      //console.log("🚀 [Gemini API 호출 직전 최종 데이터]:\n", JSON.stringify(payload, null, 2));
+      const response = await fetch(
         `https://edgeapi.ai.google.dev/v1beta/models/gemini-1.5-flash:generateContent?key=${ckApiKey}`,
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
       );
@@ -120,7 +120,7 @@ async function ckFetchGemini(userPrompt, systemInstruction) {
       const result = await response.json();
       const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) return text;
-      throw new Error('빈 응답');*/
+      throw new Error('빈 응답');
     } catch(e) {
       if (attempt === maxRetries) throw new Error('AI 통신 실패');
       await new Promise(r => setTimeout(r, delay));
