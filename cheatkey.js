@@ -99,6 +99,7 @@ async function ckFetchGemini(userPrompt, systemInstruction) {
   const payload = {
     contents: [{ parts: [{ text: userPrompt }] }],
     systemInstruction: { parts: [{ text: systemInstruction }] }
+    
   };
   const maxRetries = 5;
   let delay = 1000;
@@ -243,7 +244,7 @@ async function ckFetchImagen(promptText) {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ userPrompt, systemPrompt: systemInstruction })
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const result = await response.json();
