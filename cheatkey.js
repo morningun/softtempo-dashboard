@@ -1,14 +1,7 @@
 // ─── 치트키 생성기 전용 ───
 let ckApiKey = "";
 
-
-
 let ckBgImage = null;
-
-console.log("API 키 로드됨:", ckApiKey ? "성공 ✅" : "실패 ❌");
-if (!ckApiKey) {
-  console.error("❌ .env 파일에 GEMINI_API_KEY가 없습니다!");
-}
 
 // ─── 프리셋 초기화 (app.js 에서 호출) ───
 function ckLoadPresets(p, references) {
@@ -112,8 +105,7 @@ async function ckFetchGemini(userPrompt, systemInstruction) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       //console.log("🚀 [Gemini API 호출 직전 최종 데이터]:\n", JSON.stringify(payload, null, 2));
-      const response = await fetch(
-        `https://edgeapi.ai.google.dev/v1beta/models/gemini-1.5-flash:generateContent?key=${ckApiKey}`,
+      const response = await fetch(/api/generate,
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
       );
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
