@@ -235,13 +235,12 @@ async function ckFetchImagen(promptText) {
     parameters: { sampleCount: 1 }
   };
 
-  console.log("🚀 [Gemini API 호출 직전 데이터]:\n", JSON.stringify(payload, null, 2));
+  //console.log("🚀 [Gemini API 호출 직전 데이터]:\n", JSON.stringify(payload, null, 2));
   const maxRetries = 3;
   let delay = 1000;
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${ckApiKey}`,// 이부분 나중에 지피티 이미지(개발모드 gpt-image-1-mini)로 변경 
+      const response = await fetch(/api/generate,// 이부분 나중에 지피티 이미지(개발모드 gpt-image-1-mini)로 변경 
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
       );
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
