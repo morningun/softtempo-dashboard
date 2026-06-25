@@ -7,16 +7,16 @@ export default async function handler(req, res) {
 
   try {
      const { genre, bpm, mood, vocal, is_hook_enabled, systemPrompt, userPrompt } = req.body;
-
+        console.log('받은 데이터:', JSON.stringify({ systemPrompt: systemPrompt?.slice(0,50), userPrompt: userPrompt?.slice(0,50) }));
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: userPrompt }] }],
-          systemInstruction: { parts: [{ text: systemPrompt }] }
-        })
+        contents: [{ parts: [{ text: String(userPrompt) }] }],
+        system_instruction: { parts: [{ text: String(systemPrompt) }] }
+      })
       }
     );
 
