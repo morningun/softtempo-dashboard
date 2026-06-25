@@ -1,9 +1,7 @@
 
 
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY // Vercel 대시보드에 환경변수로 등록할 키
-});
+
 
 const MASTER_SYSTEM_PROMPT = `당신은 AI 음악 채널의 프로듀서입니다... (우리가 합의한 7단계 타임라인 및 제약규칙 전체)`;
 
