@@ -105,7 +105,7 @@ async function ckFetchGemini(userPrompt, systemInstruction) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       //console.log("🚀 [Gemini API 호출 직전 최종 데이터]:\n", JSON.stringify(payload, null, 2));
-      const response = await fetch(/api/generate,
+      const response = await fetch('/api/generate',
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
       );
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -240,7 +240,7 @@ async function ckFetchImagen(promptText) {
   let delay = 1000
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(/api/generate, {
+      const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
