@@ -8,6 +8,7 @@ module.exports = async function handler(req, res) {
   try {
      const { contents, systemInstruction } = req.body;
      console.log('받은 데이터:', JSON.stringify({ contents, systemInstruction }));
+console.log('Gemini 호출 시작');
 
     const response = await fetch(
   `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -17,6 +18,8 @@ module.exports = async function handler(req, res) {
     body: JSON.stringify({ contents, systemInstruction })
   }
 );
+console.log('Gemini 호출 완료');
+
 
     const data = await response.json();
     console.log('Gemini 응답:', JSON.stringify(data));
