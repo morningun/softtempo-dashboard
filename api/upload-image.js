@@ -7,19 +7,16 @@ module.exports = async function handler(req, res) {
   try {
     const { imageDataUrl, fileName } = req.body;
 
-    // base64 추출
     const base64Data = imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
 
-    // Drive 인증
-    const creds = JSON.parse(process.env.GOOGLE_DRIVE_CREDENTIALS);
-    const auth = new google.auth.GoogleAuth({
-      credentials: creds,
-      scopes: ['https://www.googleapis.com/auth/drive'],
-    });
+    // OAuth 토큰으로 인증
+    const tokenData = JSON.parse(process.env.YOUTUBE_TOKEN_JSON);
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials(tokenData);
+
     const drive = google.drive({ version: 'v3', auth });
 
-    // 업로드
     const { Readable } = require('stream');
     const stream = Readable.from(buffer);
 
@@ -33,12 +30,6 @@ module.exports = async function handler(req, res) {
         body: stream,
       },
       fields: 'id, webViewLink',
-    });
-
-    // 공개 권한
-    await drive.permissions.create({
-      fileId: uploaded.data.id,
-      requestBody: { type: 'anyone', role: 'reader' },
     });
 
     return res.status(200).json({
