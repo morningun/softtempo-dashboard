@@ -1,5 +1,5 @@
 
-
+const { callOpenAI } = require('./llm');
 const MASTER_SYSTEM_PROMPT = `당신은 AI 음악 채널의 프로듀서입니다... (우리가 합의한 7단계 타임라인 및 제약규칙 전체)`;
 
 module.exports = async function handler(req, res) {
@@ -8,17 +8,15 @@ module.exports = async function handler(req, res) {
   try {
      const { contents, systemInstruction } = req.body;
      console.log('받은 데이터:', JSON.stringify({ contents, systemInstruction }));
-console.log('Gemini 호출 시작');
 
-    const response = await fetch(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-  {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents, systemInstruction })
-  }
-);
-console.log('Gemini 호출 완료');
+  console.log('Gemini 호출 시작');
+    // 호출
+  const text = await callOpenAI(
+    systemInstruction.parts[0].text,
+    contents[0].parts[0].text
+  );
+  return res.status(200).json({ result: text });
+  console.log('Gemini 호출 완료');
 
 
     const data = await response.json();
