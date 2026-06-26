@@ -136,18 +136,20 @@ function ckFormatMarkdown(text) {
 
 // ─── 썸네일 캔버스 ───
 function ckDrawCanvas() {
-  // 캔버스 해상도 디바이스 픽셀 비율 맞추기
-const dpr = window.devicePixelRatio || 1;
-const rect = canvas.getBoundingClientRect();
-canvas.width = rect.width * dpr;
-canvas.height = rect.height * dpr;
-ctx.scale(dpr, dpr);
+ 
 
   const canvas = document.getElementById('ck-thumbnailCanvas');
   console.log('canvas:', canvas);
   console.log('ckBgImage:', ckBgImage);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+
+   // 캔버스 해상도 디바이스 픽셀 비율 맞추기
+const dpr = window.devicePixelRatio || 1;
+const rect = canvas.getBoundingClientRect();
+canvas.width = rect.width * dpr;
+canvas.height = rect.height * dpr;
+ctx.scale(dpr, dpr);
 
   const title = document.getElementById('ck-canvasTitle')?.value || '';
   const sub = document.getElementById('ck-canvasSub')?.value || '';
