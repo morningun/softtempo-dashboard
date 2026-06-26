@@ -144,12 +144,12 @@ function ckDrawCanvas() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-   // 캔버스 해상도 디바이스 픽셀 비율 맞추기
-const dpr = window.devicePixelRatio || 1;
-const rect = canvas.getBoundingClientRect();
-canvas.width = rect.width * dpr;
-canvas.height = rect.height * dpr;
-ctx.scale(dpr, dpr);
+      // 캔버스 해상도 디바이스 픽셀 비율 맞추기
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
 
   const title = document.getElementById('ck-canvasTitle')?.value || '';
   const sub = document.getElementById('ck-canvasSub')?.value || '';
@@ -158,10 +158,7 @@ ctx.scale(dpr, dpr);
   const fontSize = document.getElementById('ck-canvasFont')?.value || 75;
   const yPct = (document.getElementById('ck-canvasY')?.value || 50) / 100;
 
-// ===== 안전장치 추가 =====
-  if (ckBgImage === null) {
-    console.log('%c[안전] ckBgImage가 아직 로드되지 않았습니다. 로드를 시작합니다.', 'color: orange');
-  
+
   // 1. 새 이미지 객체를 만듭니다.
   const img = new Image();
 
