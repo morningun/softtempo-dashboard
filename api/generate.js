@@ -18,6 +18,7 @@ module.exports = async function handler(req, res) {
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     return res.status(200).json({ result: text });
   } catch (error) {
+    console.log('에러:', error.message);
     return res.status(500).json({ error: error.message });
   }
 }
