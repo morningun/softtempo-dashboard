@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
         contents: [{ parts: [{ text: String(userPrompt) }] }],
-        system_instruction: { parts: [{ text: String(systemPrompt) }] }
+        systemInstruction: { parts: [{ text: String(systemPrompt) }] }
       })
       }
     );
