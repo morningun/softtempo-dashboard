@@ -147,8 +147,7 @@ function ckDrawCanvas() {
       // 캔버스 해상도 디바이스 픽셀 비율 맞추기
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.height = (rect.width * 9 / 16) * dpr; // 16:9 비율 고정
     ctx.scale(dpr, dpr);
 
   const title = document.getElementById('ck-canvasTitle')?.value || '';
