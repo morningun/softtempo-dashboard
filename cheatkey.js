@@ -154,7 +154,9 @@ function ckDrawCanvas() {
   const color = document.getElementById('ck-canvasColor')?.value || '#ffffff';
   const dim = (document.getElementById('ck-canvasDim')?.value || 50) / 100;
   const fontSize = parseInt(document.getElementById('ck-canvasFont')?.value || 75);
-  const yPct = (document.getElementById('ck-canvasY')?.value || 50) / 100;
+  //const yPct = (document.getElementById('ck-canvasY')?.value || 50) / 100;
+  const yPct = (document.getElementById('ck-canvasY')?.value || 40) / 100;
+  const subYPct = (document.getElementById('ck-canvasSubY')?.value || 60) / 100;
 
   if (ckBgImage && ckBgImage !== 'failed') {
     ctx.drawImage(ckBgImage, 0, 0, W, H);
@@ -181,12 +183,15 @@ function ckDrawCanvas() {
 
   ctx.font = `bold ${Math.round(fontSize * 0.9)}px "Pretendard Variable", sans-serif`;
   ctx.fillStyle = color;
-  ctx.fillText(title, W / 2, targetY - 40);
+  //ctx.fillText(title, W / 2, targetY - 40);
+  ctx.fillText(title, W / 2, H * yPct);
 
   ctx.shadowBlur = 10;
   ctx.font = `normal ${Math.round(fontSize * 0.4)}px "Pretendard Variable", sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.fillText(sub, W / 2, targetY + 60);
+  //ctx.fillText(sub, W / 2, targetY + 60);
+  ctx.fillText(sub, W / 2, H * subYPct);
+
 
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
