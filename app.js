@@ -34,7 +34,7 @@ function showPage(name, el) {
     if (realBtn) {
       realBtn.style.display = 'block';
       // 🟢 [핵심 수정] 버튼이 켜지는 이 타이밍에 startGenerate를 다이렉트로 강제 바인딩!
-      realBtn.onclick = startGenerate; 
+      realBtn.onclick = startGenerate; startGenerate
     }
     //document.getElementById('gen-btn').style.display = 'block';
     document.getElementById('import-image').src = d.imageDataUrl;
@@ -112,52 +112,39 @@ const STEPS = [
   { name: 'Google Drive', detail: '저장 중...' },
 ];
 
-function startGenerate() {
-  console.log("==================================================");
-  console.log("🎬 [파이프라인 격발] 아래 데이터로 생성을 시작합니다.");
-  console.log("==================================================");
-  if (window.ckExportData) {
-    console.table({
-      "곡 제목": window.ckExportData.title || "없음",
-      "스타일 프롬프트": window.ckExportData.stylePrompt || "없음",
-      "가사": window.ckExportData.lyrics ? window.ckExportData.lyrics.substring(0, 40) + "..." : "없음",
-      "유튜브 기획": window.ckExportData.youtubeData || "없음",
-      "이미지 렌더링 여부": window.ckExportData.imageDataUrl ? "✅ OK" : "❌ 이미지 없음"
-    });
-  } else {
-    console.log("⚠ 현재 주입된 데이터(window.ckExportData)가 없습니다!");
-  }
-  console.log("==================================================");
+async function startGenerate() {
   if (!window.ckExportData || !window.ckExportData.imageDataUrl) {
     alert("❌ 썸네일 이미지가 없습니다! 치트키 생성기 탭에서 이미지를 먼저 생성해 주세요.");
-    console.log("🚫 [진행 차단] imageDataUrl이 비어 있어 startGenerate를 중단합니다.");
-    return; // 👈 여기서 로직을 완전히 종료시켜서 밑에 하드코딩이 아예 안 돌게 막음
+    return;
   }
 
   const btn = document.getElementById('gen-btn');
-  const card = document.getElementById('progress-card');
-  const list = document.getElementById('step-list');
   btn.disabled = true;
   btn.textContent = '생성 중...';
-  card.style.display = 'block';
-  list.innerHTML = STEPS.map((s, i) => `
-    <div class="step-row" id="step-${i}">
-      <div class="step-dot" id="dot-${i}"></div>
-      <div class="step-name">${s.name}</div>
-      <div class="step-detail" id="detail-${i}">대기 중</div>
-    </div>
-  `).join('');
-  let i = 0;
-  function tick() {
-    if (i >= STEPS.length) { btn.disabled = false; btn.textContent = '▶ 생성 시작'; return; }
-    document.getElementById('dot-' + i).className = 'step-dot running';
-    document.getElementById('detail-' + i).textContent = STEPS[i].detail;
-    setTimeout(() => {
-      document.getElementById('dot-' + i).className = 'step-dot done';
-      document.getElementById('detail-' + i).textContent = '완료';
-      i++;
-      setTimeout(tick, 300);
-    }, 1000);
+
+  try {
+    console.log('Drive 업로드 시작...');
+    const uploadRes = await fetch('/api/upload-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        imageDataUrl: window.ckExportData.imageDataUrl,
+        fileName: `${window.ckExportData.title}_thumbnail.png`
+      })
+    });
+
+    const uploadData = await uploadRes.json();
+    console.log('Drive 업로드 결과:', uploadData);
+
+    if (!uploadData.fileId) throw new Error('Drive 업로드 실패');
+
+    alert(`✅ Drive 업로드 완료!\nfileId: ${uploadData.fileId}`);
+
+  } catch(err) {
+    console.log('에러:', err.message);
+    alert('❌ ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '▶ 생성 시작';
   }
-  tick();
 }
