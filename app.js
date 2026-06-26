@@ -209,3 +209,13 @@ async function startGenerate() {
     btn.textContent = '▶ 생성 시작';
   }
 }
+window.addEventListener('DOMContentLoaded', () => {
+  loadPresets();
+  lucide.createIcons();
+  initGoogleDrive(); // 추가
+  
+  const saved = localStorage.getItem('ckExportData');
+  if (saved) {
+    window.ckExportData = JSON.parse(saved);
+  }
+});
