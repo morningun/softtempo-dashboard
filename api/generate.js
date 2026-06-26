@@ -2,14 +2,14 @@
 
 const MASTER_SYSTEM_PROMPT = `당신은 AI 음악 채널의 프로듀서입니다... (우리가 합의한 7단계 타임라인 및 제약규칙 전체)`;
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
      const { contents, systemInstruction } = req.body;
      console.log('받은 데이터:', JSON.stringify({ contents, systemInstruction }));
 
-     const response = await fetch(..., {
+     const response = await fetch(... {
         body: JSON.stringify({ contents, systemInstruction })
      });
 
