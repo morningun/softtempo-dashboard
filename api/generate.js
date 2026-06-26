@@ -9,9 +9,14 @@ module.exports = async function handler(req, res) {
      const { contents, systemInstruction } = req.body;
      console.log('받은 데이터:', JSON.stringify({ contents, systemInstruction }));
 
-     const response = await fetch(... {
-        body: JSON.stringify({ contents, systemInstruction })
-     });
+    const response = await fetch(
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents, systemInstruction })
+  }
+);
 
     const data = await response.json();
     console.log('Gemini 응답:', JSON.stringify(data));
