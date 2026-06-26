@@ -9,18 +9,18 @@ module.exports = async function handler(req, res) {
      const { contents, systemInstruction } = req.body;
      console.log('받은 데이터:', JSON.stringify({ contents, systemInstruction }));
 
-  console.log('Gemini 호출 시작');
+  
     // 호출
   const text = await callOpenAI(
     systemInstruction.parts[0].text,
     contents[0].parts[0].text
   );
   return res.status(200).json({ result: text });
-  console.log('Gemini 호출 완료');
+  
 
 
     const data = await response.json();
-    console.log('Gemini 응답:', JSON.stringify(data));
+    console.log('AI 응답:', JSON.stringify(data));
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     return res.status(200).json({ result: text });
   } catch (error) {
