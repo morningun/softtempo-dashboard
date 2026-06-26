@@ -409,13 +409,5 @@ window.pushData = function(jsonInput) {
   if (typeof showPage === 'function') {
     showPage('generate');
   }
-
-  // 🟢 [추가] 탭 전환이 끝난 직후, 맨 밑바닥에 새로 심은 버튼을 강제로 '짜잔' 하고 보여주는 격발 장치
-  setTimeout(() => {
-    var finalBtn = document.getElementById('gen-btn');
-    if (finalBtn) {
-      finalBtn.style.setProperty('display', 'block', 'important');
-      finalBtn.innerText = '콘텐츠 생성 완료';
-    }
-  }, 50); // app.js가 화면 다 그릴 때까지 0.05초만 기다렸다가 강제 조준
+ 
 }
