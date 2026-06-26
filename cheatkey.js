@@ -101,7 +101,7 @@ async function ckFetchGemini(userPrompt, systemInstruction) {
     systemInstruction: { parts: [{ text: systemInstruction }] }
     
   };
-  const maxRetries = 5;
+  const maxRetries = 1;
   let delay = 1000;
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
