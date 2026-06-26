@@ -1,5 +1,12 @@
 // ─── 페이지 전환 ───
 
+
+// ─── Google Drive 업로드 ───
+const GOOGLE_CLIENT_ID = '1069291813254-bnb51fntviqatbdjsul7jct2hug174ft.apps.googleusercontent.com';
+const DRIVE_FOLDER_ID = '1twt_l-QU1UJi0Hsn_bpfWfE9f2ChaW4R';
+
+let driveAccessToken = null;
+
 // app.js
 function initCanvas() {
   if (typeof ckDrawCanvas === 'function') {
@@ -7,6 +14,56 @@ function initCanvas() {
   } else {
     console.log('ckDrawCanvas 아직 로드 안됨');
   }
+}
+function initGoogleDrive() {
+  gapi.load('client', async () => {
+    await gapi.client.init({
+      discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+    });
+  });
+}
+
+function googleLogin() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: (response) => {
+      driveAccessToken = response.access_token;
+      console.log('구글 로그인 완료');
+      uploadImageToDrive();
+    },
+  });
+  client.requestAccessToken();
+}
+
+async function uploadImageToDrive() {
+  if (!window.ckExportData?.imageDataUrl) {
+    alert('이미지가 없습니다.');
+    return;
+  }
+
+  const base64Data = window.ckExportData.imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
+  const byteArray = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+  const blob = new Blob([byteArray], { type: 'image/png' });
+
+  const metadata = {
+    name: `${window.ckExportData.title}_thumbnail.png`,
+    parents: [DRIVE_FOLDER_ID],
+  };
+
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', blob);
+
+  const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${driveAccessToken}` },
+    body: form,
+  });
+
+  const data = await response.json();
+  console.log('Drive 업로드 완료:', data);
+  return data.id;
 }
 
 // DOM 로드 후 호출
@@ -114,7 +171,7 @@ const STEPS = [
 
 async function startGenerate() {
   if (!window.ckExportData || !window.ckExportData.imageDataUrl) {
-    alert("❌ 썸네일 이미지가 없습니다! 치트키 생성기 탭에서 이미지를 먼저 생성해 주세요.");
+    alert("❌ 썸네일 이미지가 없습니다!");
     return;
   }
 
@@ -123,22 +180,26 @@ async function startGenerate() {
   btn.textContent = '생성 중...';
 
   try {
-    console.log('Drive 업로드 시작...');
-    const uploadRes = await fetch('/api/upload-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        imageDataUrl: window.ckExportData.imageDataUrl,
-        fileName: `${window.ckExportData.title}_thumbnail.png`
-      })
+    // Step 1: 구글 로그인 + Drive 업로드
+    await new Promise((resolve, reject) => {
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/drive.file',
+        callback: async (response) => {
+          try {
+            driveAccessToken = response.access_token;
+            const fileId = await uploadImageToDrive();
+            console.log('Drive 파일 ID:', fileId);
+            resolve(fileId);
+          } catch(e) {
+            reject(e);
+          }
+        },
+      });
+      client.requestAccessToken();
     });
 
-    const uploadData = await uploadRes.json();
-    console.log('Drive 업로드 결과:', uploadData);
-
-    if (!uploadData.fileId) throw new Error('Drive 업로드 실패');
-
-    alert(`✅ Drive 업로드 완료!\nfileId: ${uploadData.fileId}`);
+    alert('✅ Drive 업로드 완료!');
 
   } catch(err) {
     console.log('에러:', err.message);
