@@ -279,7 +279,7 @@ function ckDownloadCanvas() {
 }
 
 // 캔버스 실시간 업데이트
-['ck-canvasTitle','ck-canvasSub','ck-canvasColor','ck-canvasDim','ck-canvasFont','ck-canvasY'].forEach(id => {
+['ck-canvasTitle','ck-canvasSub','ck-canvasColor','ck-canvasDim','ck-canvasFont','ck-canvasY','ck-canvasSubY'].forEach(id => {
   document.addEventListener('input', e => { if (e.target.id === id) ckDrawCanvas(); });
 });
 
