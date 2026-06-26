@@ -221,7 +221,7 @@ if (ckBgImage && ckBgImage !== "failed") {
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
-}
+
 
 function ckInsertVisualPrompt() {
   const el = document.getElementById('ck-imagePrompt');
