@@ -136,73 +136,43 @@ function ckFormatMarkdown(text) {
 
 // ─── 썸네일 캔버스 ───
 function ckDrawCanvas() {
- 
-
-  const canvas = document.getElementById('ck-thumbnailCanvas');
-  console.log('canvas:', canvas);
-  console.log('ckBgImage:', ckBgImage);
+ const canvas = document.getElementById('ck-thumbnailCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-      // 캔버스 해상도 디바이스 픽셀 비율 맞추기
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.height = (rect.width * 9 / 16) * dpr; // 16:9 비율 고정
-    ctx.scale(dpr, dpr);
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = (rect.width * 9 / 16) * dpr;
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width;
+  const H = rect.width * 9 / 16;
 
   const title = document.getElementById('ck-canvasTitle')?.value || '';
   const sub = document.getElementById('ck-canvasSub')?.value || '';
   const color = document.getElementById('ck-canvasColor')?.value || '#ffffff';
   const dim = (document.getElementById('ck-canvasDim')?.value || 50) / 100;
-  const fontSize = document.getElementById('ck-canvasFont')?.value || 75;
+  const fontSize = parseInt(document.getElementById('ck-canvasFont')?.value || 75);
   const yPct = (document.getElementById('ck-canvasY')?.value || 50) / 100;
 
-
-  // 1. 새 이미지 객체를 만듭니다.
-  const img = new Image();
-
-  // 2. 이벤트 리스너 등록 (성공 시)
-  img.onload = function() {
-    console.log('%c🎉 이미지 로드 완료! 캔버스를 다시 그립니다.', 'color: green');
-    ckBgImage = img; // null 탈출 (무한루프 방지)
-    ckDrawCanvas();  
-  };
-
-  // 3. 이벤트 리스너 등록 (실패 시)
-  img.onerror = function() {
-    console.error("❌ 이미지 주소가 틀렸거나 로드에 실패했습니다. 배경 없이 진행합니다.");
-    ckBgImage = "failed"; // 다시는 이 if문에 안 들어오게 방어
-    ckDrawCanvas();       
-  };
-
-  // 4. 진짜 이미지 경로를 주입합니다. (대시보드의 가져온 이미지 src 사용)
-  // 만약 특정 로컬 이미지 파일로 고정하고 싶다면 이 자리에 'style.css'가 있는 폴더 기준 이미지 경로를 넣으셔도 됩니다.
-  img.src = document.getElementById('import-image')?.src || 'path/to/your/background/image.jpg'; 
-  
-  // 5. ⚠️ 중요! 이미지가 로드될 때까지 아랫줄로 안 내려가게 여기서 딱 끊어줍니다.
-  return;
+  if (ckBgImage && ckBgImage !== 'failed') {
+    ctx.drawImage(ckBgImage, 0, 0, W, H);
+  } else {
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#1e1b4b');
+    grad.addColorStop(0.5, '#311042');
+    grad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
   }
-  // ========================
-
- // 💡 조건문에 !== "failed" 를 추가해서 글자 덩어리일 때는 drawImage를 건너뛰게 합니다.
-if (ckBgImage && ckBgImage !== "failed") {
-  ctx.drawImage(ckBgImage, 0, 0, canvas.width, canvas.height);
-} else {
-  // 🎨 이미지 로드 실패 시 작성해두신 예쁜 그라데이션이 배경으로 깔립니다!
-  const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  grad.addColorStop(0, '#1e1b4b');
-  grad.addColorStop(0.5, '#311042');
-  grad.addColorStop(1, '#0f172a');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
 
   ctx.fillStyle = `rgba(0,0,0,${0.3 + dim * 0.5})`;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, W, H);
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const targetY = canvas.height * yPct;
+  const targetY = H * yPct;
 
   ctx.shadowColor = 'rgba(0,0,0,0.8)';
   ctx.shadowBlur = 20;
@@ -211,16 +181,17 @@ if (ckBgImage && ckBgImage !== "failed") {
 
   ctx.font = `bold ${Math.round(fontSize * 0.9)}px "Pretendard Variable", sans-serif`;
   ctx.fillStyle = color;
-  ctx.fillText(title, canvas.width / 2, targetY - 40);
+  ctx.fillText(title, W / 2, targetY - 40);
 
   ctx.shadowBlur = 10;
   ctx.font = `normal ${Math.round(fontSize * 0.4)}px "Pretendard Variable", sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.fillText(sub, canvas.width / 2, targetY + 60);
+  ctx.fillText(sub, W / 2, targetY + 60);
 
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
+}
 
 
 function ckInsertVisualPrompt() {
@@ -381,17 +352,7 @@ async function ckGenerate() {
     document.getElementById('ck-youtubeLoading').style.display = 'none';
     document.getElementById('ck-youtubePlaceholder').style.display = 'block';
   }
-// ⭕ 이 새 코드로 교체해서 넣으세요
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const savedData = localStorage.getItem('my_test_json');
-    if (savedData) {
-      const parsed = JSON.parse(savedData);
-      console.log("📦 로컬 스토리지에서 복구할 데이터 발견:", parsed.title);
-      window.pushData(parsed);
-    }
-  }, 100); // 0.1초 뜸 들이기 
-});
+
 
   btn.disabled = false;
   btn.style.opacity = '1';
