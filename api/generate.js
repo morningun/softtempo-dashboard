@@ -9,13 +9,13 @@ export default async function handler(req, res) {
      const { genre, bpm, mood, vocal, is_hook_enabled, systemPrompt, userPrompt } = req.body;
         console.log('받은 데이터:', JSON.stringify({ systemPrompt: systemPrompt?.slice(0,50), userPrompt: userPrompt?.slice(0,50) }));
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
         contents: [{ parts: [{ text: String(userPrompt) }] }],
-        systemInstruction: { parts: [{ text: String(systemPrompt) }] }
+        system_instruction: { parts: [{ text: String(systemPrompt) }] }
       })
       }
     );
