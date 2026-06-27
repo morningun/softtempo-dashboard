@@ -13,6 +13,7 @@ const notion = new Client({ auth: NOTION_API_KEY });
  */
 export async function insertPromptToNotion(musicData) {
   try {
+      console.log("DB ID:", NOTION_DATABASE_ID);
     // 노션 API 규격에 맞추어 데이터 삽입 요청
     const response = await notion.pages.create({
       parent: {
