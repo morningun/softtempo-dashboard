@@ -45,6 +45,8 @@ export default async function handler(req, res) {
     );
 
     const geminiData = await geminiRes.json();
+    console.log("Gemini 응답:", JSON.stringify(geminiData));  // 추가
+
     const text = geminiData.candidates[0].content.parts[0].text;
     const musicData = JSON.parse(text);
 
