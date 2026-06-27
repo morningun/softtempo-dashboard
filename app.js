@@ -220,10 +220,10 @@ const triggerRes = await fetch('/api/trigger', {
     btn.textContent = '▶ 생성 시작';
       }
     }
-window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', () => {
   loadPresets();
   lucide.createIcons();
-  initGoogleDrive(); // 추가
+  //initGoogleDrive(); // 추가
   
   const saved = localStorage.getItem('ckExportData');
   if (saved) {
