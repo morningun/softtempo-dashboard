@@ -11,7 +11,8 @@ module.exports = async function handler(req, res) {
     const accountId = process.env.R2_ACCOUNT_ID;
     const bucketName = process.env.R2_BUCKET_NAME;
     const token = process.env.R2_ACCESS_TOKEN;
-    const fileKey = fileName || `thumbnail_${Date.now()}.png`;
+    //const fileKey = fileName || `thumbnail_${Date.now()}.png`;
+    const fileKey = `thumbnail_${Date.now()}.png`;
 
     const response = await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${accountId}/r2/buckets/${bucketName}/objects/${fileKey}`,
