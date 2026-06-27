@@ -5,7 +5,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { fileId, title, stylPrompt, lyrics, language } = req.body;
+    const { fileId, title, stylPrompt, lyrics, language, youtubeData } = req.body;
 let ytTitle = title || '';
 let ytDescription = '';
 let ytTags = '';
