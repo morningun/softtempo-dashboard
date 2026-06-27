@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         })
       }
     );
-
+    console.log("GEMINI_API_KEY 존재:", !!process.env.GEMINI_API_KEY);
     const geminiData = await geminiRes.json();
     console.log("Gemini 응답:", JSON.stringify(geminiData));  // 추가
 
