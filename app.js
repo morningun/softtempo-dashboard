@@ -183,7 +183,7 @@ async function startGenerate() {
     const d = window.ckExportData;
 
     // Step 1: 서버사이드 Drive 업로드
-    const uploadRes = await fetch('/api/upload-image', {
+    const uploadRes = await fetch('/api/upload-image-r2', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -192,8 +192,8 @@ async function startGenerate() {
       })
     });
     const uploadData = await uploadRes.json();
-    const fileId = uploadData.fileId;
-    console.log('Drive 파일 ID:', fileId);
+    const fileId = uploadData.fileKey;
+    console.log('R2 파일 키:', fileId);
 
     // Step 2: GitHub Actions 트리거
     const triggerRes = await fetch('/api/trigger', {
