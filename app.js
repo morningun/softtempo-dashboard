@@ -3,7 +3,7 @@
 
 // ─── Google Drive 업로드 ───
 const GOOGLE_CLIENT_ID = '1069291813254-et226k3b26bl4bv8pft2efhfj4mqouvo.apps.googleusercontent.com';
-const DRIVE_FOLDER_ID = '1twt_l-QU1UJi0Hsn_bpfWfE9f2ChaW4R';
+const DRIVE_FOLDER_ID = '1sP3bhmhcFBDIQ7vV45TZO44ktBCpe9Wt';
 
 let driveAccessToken = null;
 
@@ -190,6 +190,21 @@ async function startGenerate() {
             driveAccessToken = response.access_token;
             const fileId = await uploadImageToDrive();
             console.log('Drive 파일 ID:', fileId);
+            // Step 2: GitHub Actions 트리거
+            const d = window.ckExportData;
+            const triggerRes = await fetch('/api/trigger', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                fileId: fileId,
+                title: d.title || '',
+                stylPrompt: d.stylePrompt || '',
+                lyrics: d.lyrics || '',
+                language: 'ko',
+              })
+            });
+            const triggerData = await triggerRes.json();
+            console.log('Actions 트리거 결과:', triggerData);
             resolve(fileId);
           } catch(e) {
             reject(e);
@@ -199,7 +214,8 @@ async function startGenerate() {
       client.requestAccessToken();
     });
 
-    alert('✅ Drive 업로드 완료!');
+   alert('✅ Drive 업로드 + Actions 트리거 완료!');
+
 
   } catch(err) {
     console.log('에러:', err.message);
