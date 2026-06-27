@@ -181,50 +181,45 @@ async function startGenerate() {
 
   try {
     // Step 1: 구글 로그인 + Drive 업로드
-    await new Promise((resolve, reject) => {
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/drive.file',
-        callback: async (response) => {
-          try {
-            driveAccessToken = response.access_token;
-            const fileId = await uploadImageToDrive();
-            console.log('Drive 파일 ID:', fileId);
-            // Step 2: GitHub Actions 트리거
-            const d = window.ckExportData;
-            const triggerRes = await fetch('/api/trigger', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                fileId: fileId,
-                title: d.title || '',
-                stylPrompt: d.stylePrompt || '',
-                lyrics: d.lyrics || '',
-                language: 'ko',
-              })
-            });
-            const triggerData = await triggerRes.json();
-            console.log('Actions 트리거 결과:', triggerData);
-            resolve(fileId);
-          } catch(e) {
-            reject(e);
-          }
-        },
-      });
-      client.requestAccessToken();
-    });
+    // Step 1: 서버사이드 Drive 업로드
+const uploadRes = await fetch('/api/upload-image', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    imageDataUrl: d.imageDataUrl,
+    fileName: `${d.title}_thumbnail.png`,
+  })
+});
+const uploadData = await uploadRes.json();
+const fileId = uploadData.fileId;
+console.log('Drive 파일 ID:', fileId);
+
+// Step 2: GitHub Actions 트리거
+const triggerRes = await fetch('/api/trigger', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    fileId: fileId,
+    title: d.title || '',
+    stylPrompt: d.stylePrompt || '',
+    lyrics: d.lyrics || '',
+    language: 'ko',
+      })
+     });
+     const triggerData = await triggerRes.json();
+      console.log('Actions 트리거 결과:', triggerData);
 
    alert('✅ Drive 업로드 + Actions 트리거 완료!');
 
 
-  } catch(err) {
+    } catch(err) {
     console.log('에러:', err.message);
     alert('❌ ' + err.message);
-  } finally {
+    } finally {
     btn.disabled = false;
     btn.textContent = '▶ 생성 시작';
-  }
-}
+      }
+    }
 window.addEventListener('DOMContentLoaded', () => {
   loadPresets();
   lucide.createIcons();
