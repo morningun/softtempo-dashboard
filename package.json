@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/morningun/softtempo-dashboard#readme",
   "dependencies": {
+    "@notionhq/client": "^5.22.0",
     "googleapis": "^173.0.0"
   }
 }
