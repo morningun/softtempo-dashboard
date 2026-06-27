@@ -2,8 +2,8 @@
 
 
 // ─── Google Drive 업로드 ───
-const GOOGLE_CLIENT_ID = '1069291813254-et226k3b26bl4bv8pft2efhfj4mqouvo.apps.googleusercontent.com';
-const DRIVE_FOLDER_ID = '1sP3bhmhcFBDIQ7vV45TZO44ktBCpe9Wt';
+//const GOOGLE_CLIENT_ID = '1069291813254-et226k3b26bl4bv8pft2efhfj4mqouvo.apps.googleusercontent.com';
+//const DRIVE_FOLDER_ID = '1sP3bhmhcFBDIQ7vV45TZO44ktBCpe9Wt';
 
 let driveAccessToken = null;
 
