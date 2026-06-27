@@ -1,8 +1,8 @@
 import { Client } from '@notionhq/client';
 
 // ⚠️ 보안을 위해 API 키와 DB ID는 환경변수(process.env)로 관리하는 것이 좋습니다.
-const NOTION_API_KEY = "NOTION_API_KEY"; // 노션에서 발급받은 API 키
-const NOTION_DATABASE_ID = "NOTION_DATABASE_ID";  // 생성한 노션 표의 ID
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
 // 노션 클라이언트 초기화
 const notion = new Client({ auth: NOTION_API_KEY });
