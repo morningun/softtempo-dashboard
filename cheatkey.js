@@ -319,6 +319,7 @@ async function ckGenerate() {
 
   if (hookCheck) systemLyric += `\n6) [Chorus] 직전에 훅을 삽입:\n[Hook]\nwoo woo woo woo wah uh yeah e yeah e yeah ~eh`;
   if (timelineCheck) systemLyric += `\n7) 시간 타임스탬프나 한글 메타 지시어 제거. [Verse 1], [Chorus] 등 영어 태그만 사용.`;
+  systemLyric += `\n8) 가사는 [Verse 1], [Pre-Chorus], [Chorus], [Verse 2], [Bridge], [Outro] 섹션을 모두 포함해서 최소 300단어 이상 작성해.`;
 
   const userLyric = `[곡 정보]\n제목: ${title}\n언어: ${language}\n컨셉: ${concept}\n\n[뼈대 가사]\n${refData.structure}\n\n위 뼈대를 기반으로 ${language} 가사 전문을 출력해줘.`;
 
