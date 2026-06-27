@@ -39,7 +39,11 @@ export async function insertPromptToNotion(musicData) {
         },
         // 4. 템포 (Select 타입 - 문자열로 전달)
         '⏱️ 템포 (BPM)': {
-          rich_text: { name: musicData.bpm || '100 BPM' }
+          rich_text: [
+            {
+                text: { content: musicData.bpm || '100 BPM' }
+            }
+        ]
         },
         // 5. 악기 구성 (Rich text 타입)
         '🎸 악기 구성': {
