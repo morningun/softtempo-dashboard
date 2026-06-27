@@ -205,6 +205,7 @@ async function startGenerate() {
         stylPrompt: d.stylePrompt || '',
         lyrics: d.lyrics || '',
         language: 'ko',
+        youtubeData: d.youtubeData || '',
       })
     });
     const triggerData = await triggerRes.json();

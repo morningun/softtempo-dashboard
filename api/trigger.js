@@ -6,17 +6,31 @@ module.exports = async function handler(req, res) {
 
   try {
     const { fileId, title, stylPrompt, lyrics, language } = req.body;
+let ytTitle = title || '';
+let ytDescription = '';
+let ytTags = '';
 
-    const payload = JSON.stringify({
-      ref: 'master',
-      inputs: {
-        image_file_id: fileId,
-        title: title || '',
-        style_prompt: stylPrompt || '',
-        lyrics: lyrics || '',
-        language: language || 'ko',
-      }
-    });
+if (youtubeData) {
+  try {
+    const yt = JSON.parse(youtubeData);
+    ytTitle = yt.title || title || '';
+    ytDescription = yt.description || '';
+    ytTags = (yt.tags || []).join(',');
+  } catch(e) {}
+}
+
+const payload = JSON.stringify({
+  ref: 'master',
+  inputs: {
+    image_file_id: fileId,
+    title: ytTitle,
+    style_prompt: stylPrompt || '',
+    lyrics: lyrics || '',
+    language: language || 'ko',
+    description: ytDescription,
+    tags: ytTags,
+  }
+});
 
     const options = {
       hostname: 'api.github.com',

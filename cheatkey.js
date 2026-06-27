@@ -218,7 +218,7 @@ async function ckFetchImagen(promptText) {
     parameters: { sampleCount: 1 }
   };
 
-  //console.log("🚀 [Gemini API 호출 직전 데이터]:\n", JSON.stringify(payload, null, 2));
+  
   const maxRetries = 3;
   let delay = 1000
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -324,7 +324,14 @@ async function ckGenerate() {
   const userLyric = `[곡 정보]\n제목: ${title}\n언어: ${language}\n컨셉: ${concept}\n\n[뼈대 가사]\n${refData.structure}\n\n위 뼈대를 기반으로 ${language} 가사 전문을 출력해줘.`;
 
   //const systemYoutube = `당신은 유튜브 채널 수익화 마케터입니다. 입력 정보를 바탕으로 마케팅 기획서를 한국어로 작성하세요. 마지막 줄에 [Visual Prompt] 태그로 영문 이미지 프롬프트를 기재해 주세요.`;
-  const systemYoutube = `당신은 유튜브 채널 수익화 마케터입니다. 입력 정보를 바탕으로 마케팅 기획서를 ${language}로 작성하세요. 마지막 줄에 [Visual Prompt] 태그로 영문 이미지 프롬프트를 기재해 주세요.`
+  //const systemYoutube = `당신은 유튜브 채널 수익화 마케터입니다. 입력 정보를 바탕으로 마케팅 기획서를 ${language}로 작성하세요. 마지막 줄에 [Visual Prompt] 태그로 영문 이미지 프롬프트를 기재해 주세요.`
+  const systemYoutube = `당신은 유튜브 채널 수익화 마케터입니다. 입력 정보를 바탕으로 아래 JSON 형식으로만 응답하세요. 다른 텍스트 없이 JSON만 출력하세요.
+{
+  "title": "유튜브 제목 (60자 이내)",
+  "description": "유튜브 설명란 (500자 이내)",
+  "tags": ["태그1", "태그2", "태그3"],
+  "visual_prompt": "영문 이미지 프롬프트"
+}`
   const userYoutube = `[곡 기획]\n제목: ${title}\n언어: ${language}\n주제: ${concept}\n스타일: ${stylePrompt}\n\n유튜브 최적화 기획서 (타겟 분석, 제목 5선, 썸네일 가이드, 설명란 템플릿) 작성해줘.\n마지막 줄: [Visual Prompt] 영문 이미지 프롬프트`;
 
   try {
@@ -339,12 +346,20 @@ async function ckGenerate() {
 
     document.getElementById('ck-youtubeLoading').style.display = 'none';
     document.getElementById('ck-youtubeOutputBlock').style.display = 'block';
-    document.getElementById('ck-youtubeOutputText').innerHTML = ckFormatMarkdown(youtube);
-
-    const matchVisual = youtube.match(/\[Visual Prompt\]\s*(.*)/i);
-    if (matchVisual?.[1]) {
-      window.ckActiveSuggestedPrompt = matchVisual[1].trim();
-      document.getElementById('ck-imagePrompt').value = window.ckActiveSuggestedPrompt;
+    let youtubeJson = null;
+    try {
+      const clean = youtube.replace(/```json|```/g, '').trim();
+      youtubeJson = JSON.parse(clean);
+      window.ckYoutubeJson = youtubeJson;
+      document.getElementById('ck-youtubeOutputText').innerHTML = ckFormatMarkdown(
+        `**제목:** ${youtubeJson.title}\n\n**설명:**\n${youtubeJson.description}\n\n**태그:** ${youtubeJson.tags.join(', ')}\n\n**Visual Prompt:** ${youtubeJson.visual_prompt}`
+      );
+      if (youtubeJson.visual_prompt) {
+        window.ckActiveSuggestedPrompt = youtubeJson.visual_prompt;
+        document.getElementById('ck-imagePrompt').value = youtubeJson.visual_prompt;
+      }
+    } catch(e) {
+      document.getElementById('ck-youtubeOutputText').innerHTML = ckFormatMarkdown(youtube);
     }
 
     document.getElementById('ck-canvasTitle').value = title;
@@ -371,7 +386,7 @@ function ckSendToGenerate() {
     imageDataUrl: canvas.toDataURL('image/png'),
     stylePrompt: document.getElementById('ck-sunoStyleText')?.innerText || '',
     lyrics: document.getElementById('ck-lyricsOutputText')?.innerText || '',
-    youtubeData: document.getElementById('ck-youtubeOutputText')?.innerText || '',
+    youtubeData: window.ckYoutubeJson ? JSON.stringify(window.ckYoutubeJson) : document.getElementById('ck-youtubeOutputText')?.innerText || '',
     title: document.getElementById('ck-songTitle')?.value || '',
   };
 
