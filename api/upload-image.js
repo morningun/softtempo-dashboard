@@ -11,10 +11,11 @@ module.exports = async function handler(req, res) {
     const buffer = Buffer.from(base64Data, 'base64');
 
     // OAuth 토큰으로 인증
-    const tokenData = JSON.parse(process.env.YOUTUBE_TOKEN_JSON);
-    const auth = new google.auth.OAuth2( process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET);
-    auth.setCredentials(tokenData);
+    const credentialsInfo = JSON.parse(process.env.GOOGLE_DRIVE_CREDENTIALS);
+    const auth = new google.auth.GoogleAuth({
+    credentials: credentialsInfo,
+    scopes: ['https://www.googleapis.com/auth/drive.file'],
+    });
 
     const drive = google.drive({ version: 'v3', auth });
 
