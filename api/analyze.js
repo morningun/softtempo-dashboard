@@ -50,6 +50,7 @@ export default async function handler(req, res) {
     const text = geminiData.candidates[0].content.parts[0].text;
     const musicData = JSON.parse(text);
     console.log("NOTION_API_KEY 앞 10자:", process.env.NOTION_API_KEY?.slice(0, 10));
+    console.log("NOTION_DATABASE_ID:", process.env.NOTION_DATABASE_ID);
 
     await insertPromptToNotion(musicData);
 
