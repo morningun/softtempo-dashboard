@@ -180,12 +180,14 @@ async function startGenerate() {
   btn.textContent = '생성 중...';
 
   try {
+
     // Step 1: 구글 로그인 + Drive 업로드
     // Step 1: 서버사이드 Drive 업로드
-const uploadRes = await fetch('/api/upload-image', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
+    const d = window.ckExportData;
+    const uploadRes = await fetch('/api/upload-image', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
     imageDataUrl: d.imageDataUrl,
     fileName: `${d.title}_thumbnail.png`,
   })
