@@ -47,7 +47,7 @@ module.exports = async function handler(req, res) {
       request.end();
     });
 
-    const mp4Url = `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${process.env.R2_BUCKET_NAME}/${r2Key}`;
+     const mp4Url = `${process.env.R2_PUBLIC_URL}/${r2Key}`;
     return res.status(200).json({ success: true, message: 'Actions 트리거 성공', r2_key: r2Key, mp4_url: mp4Url });
 
   } catch (error) {
