@@ -42,10 +42,10 @@ async function handleYoutubeAnalysis() {
 }
 
 // 2. 프리셋 카드의 [적용] 버튼을 누르면 위쪽 수노 프롬프트창 값을 바꾸는 함수
-function applyPresetToPrompt(fullPromptText) {
-  const promptTextArea = document.querySelector('textarea'); 
-  if (promptTextArea) {
-    promptTextArea.value = fullPromptText;
+function applyPresetToPrompt(fullPromptText) {  
+  const promptDiv = document.getElementById('ck-sunoStyleText');
+  if (promptDiv) {
+    promptDiv.textContent = fullPromptText;
     console.log("🚀 프롬프트가 주입되었습니다.");
   } else {
     alert("프롬프트 입력창을 찾을 수 없습니다.");
