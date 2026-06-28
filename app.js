@@ -219,9 +219,25 @@ async function startGenerate() {
     const resultDownload = document.getElementById('result-download');
     const resultUploadBtn = document.getElementById('result-upload-btn');
 
-    resultVideo.src = mp4Url;
-    resultDownload.href = mp4Url;
+    
     resultArea.style.display = 'block';
+    resultDownload.href = mp4Url;
+
+    // R2 파일 준비될 때까지 폴링
+    const statusMsg = document.getElementById('result-status');
+    if (statusMsg) statusMsg.textContent = '⏳ 영상 생성 중... (자동으로 로드됩니다)';
+
+    const pollVideo = setInterval(async () => {
+      try {
+        const res = await fetch(mp4Url, { method: 'HEAD' });
+        if (res.ok) {
+          clearInterval(pollVideo);
+          resultVideo.src = mp4Url;
+          if (statusMsg) statusMsg.textContent = '✅ 영상 준비 완료';
+        }
+      } catch(e) {}
+    }, 5000);
+
 
     resultUploadBtn.onclick = async () => {
       resultUploadBtn.disabled = true;
