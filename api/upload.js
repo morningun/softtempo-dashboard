@@ -19,7 +19,7 @@ module.exports = async function handler(req, res) {
 
     const options = {
       hostname: 'api.github.com',
-      path: `/repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/actions/workflows/music-upload.yml/dispatches`,
+      path: `/repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/actions/workflows/ai-music-upload.yml/dispatches`,
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
