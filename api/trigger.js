@@ -7,7 +7,8 @@ module.exports = async function handler(req, res) {
   try {
     const { fileId, title, stylPrompt, lyrics, language } = req.body;
 
-    const r2Key = `videos/${Date.now()}.mp4`;
+      const r2Key = `videos/latest.mp4`;
+
 
     const payload = JSON.stringify({
       ref: 'master',
