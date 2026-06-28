@@ -1,29 +1,25 @@
-// /api/trigger.js
+// /api/upload.js
 const https = require('https');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-   const { fileId, title, stylPrompt, lyrics, language } = req.body;
-
-    const r2Key = `videos/${Date.now()}.mp4`;
+    const { r2_key, title, description, tags } = req.body;
 
     const payload = JSON.stringify({
-    ref: 'master',
-   inputs: {
-    image_file_id: fileId,
-    title: title || '',
-    style_prompt: stylPrompt || '',
-    lyrics: lyrics || '',
-    language: language || 'ko',
-    r2_key: r2Key,
-    }
-   }  );
+      ref: 'master',
+      inputs: {
+        r2_key: r2_key || '',
+        title: title || '',
+        description: description || '',
+        tags: tags || '',
+      }
+    });
 
     const options = {
       hostname: 'api.github.com',
-      path: `/repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/actions/workflows/music-auto.yml/dispatches`,
+      path: `/repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/actions/workflows/music-upload.yml/dispatches`,
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -47,11 +43,7 @@ module.exports = async function handler(req, res) {
       request.end();
     });
 
-    const r2Key = `videos/${Date.now()}.mp4`;
-    const mp4Url = `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${process.env.R2_BUCKET_NAME}/${r2Key}`;
-
-    const mp4Url = `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${process.env.R2_BUCKET_NAME}/${r2Key}`;
-    return res.status(200).json({ success: true, message: 'Actions 트리거 성공', r2_key: r2Key, mp4_url: mp4Url });
+    return res.status(200).json({ success: true, message: '유튜브 업로드 트리거 성공' });
 
   } catch (error) {
     console.log('에러:', error.message);

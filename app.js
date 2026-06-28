@@ -211,7 +211,45 @@ async function startGenerate() {
     const triggerData = await triggerRes.json();
     console.log('Actions 트리거 결과:', triggerData);
 
-    alert('✅ Drive 업로드 + Actions 트리거 완료!');
+     const r2Key = triggerData.r2_key || '';
+    const mp4Url = triggerData.mp4_url || '';
+
+    const resultArea = document.getElementById('result-area');
+    const resultVideo = document.getElementById('result-video');
+    const resultDownload = document.getElementById('result-download');
+    const resultUploadBtn = document.getElementById('result-upload-btn');
+
+    resultVideo.src = mp4Url;
+    resultDownload.href = mp4Url;
+    resultArea.style.display = 'block';
+
+    resultUploadBtn.onclick = async () => {
+      resultUploadBtn.disabled = true;
+      resultUploadBtn.textContent = '업로드 중...';
+      try {
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            r2_key: r2Key,
+            title: d.title || '',
+            description: d.youtubeData ? JSON.parse(d.youtubeData).description : '',
+            tags: d.youtubeData ? (JSON.parse(d.youtubeData).tags || []).join(',') : '',
+          })
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.success) {
+          alert('✅ 유튜브 업로드 트리거 완료!');
+        } else {
+          alert('❌ 업로드 실패: ' + uploadData.error);
+        }
+      } catch(err) {
+        alert('❌ ' + err.message);
+      } finally {
+        resultUploadBtn.disabled = false;
+        resultUploadBtn.textContent = '▶ 유튜브 업로드';
+      }
+    };
 
   } catch(err) {
     console.log('에러:', err.message);
