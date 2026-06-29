@@ -194,10 +194,12 @@ function ckDrawCanvas() {
 
 
   ctx.shadowBlur = 0;
+// 웨이브폼 드래그
+
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
 }
-// 웨이브폼 드래그
+
 function ckInitWaveDrag() {
   const canvas = document.getElementById('ck-thumbnailCanvas');
   if (!canvas) return;
@@ -228,6 +230,7 @@ function ckInitWaveDrag() {
 
   ctx.restore();
 }
+
 
 function ckInsertVisualPrompt() {
   const el = document.getElementById('ck-imagePrompt');
