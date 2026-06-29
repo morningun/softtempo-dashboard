@@ -65,7 +65,15 @@ function ckSwitchTab(tab) {
       btn.style.color = t === tab ? 'white' : '#64748b';
     }
   });
-  if (tab === 'thumbnail') setTimeout(() => ckDrawCanvas(), 50);
+   if (tab === 'thumbnail') {
+    setTimeout(() => {
+      ckDrawCanvas();
+      if (!window.ckWaveDragInit) {
+        ckInitWaveDrag();
+        window.ckWaveDragInit = true;
+      }
+    }, 50);
+  }
 }
 
 // ─── 복사 ───
@@ -485,7 +493,7 @@ function ckSendToGenerate() {
 }
 
 
-// 콘솔 전용 치트키 배달 함수 최적화 버전
+// 콘솔 전용 치트키 배달 함수 최적화  버전
 window.pushData = function(jsonInput) {
   localStorage.setItem('my_test_json', JSON.stringify(jsonInput));
 
