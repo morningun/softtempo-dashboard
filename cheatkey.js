@@ -521,8 +521,9 @@ window.pushData = function(jsonInput) {
     stylePrompt: jsonInput.style,
     lyrics: jsonInput.lyrics,
     youtubeData: jsonInput.youtube,
-    imageDataUrl: document.getElementById('ck-thumbnailCanvas') ? 
-                  document.getElementById('ck-thumbnailCanvas').toDataURL('image/png') : ""
+     imageDataUrl: document.getElementById('import-image-clean')?.src || "",
+    previewImageDataUrl: document.getElementById('import-image')?.src || "",
+    waveform: jsonInput.waveform || { style: 'none' }
   };
 
   if (typeof showPage === 'function') {
