@@ -93,7 +93,8 @@ function showPage(name, el) {
       realBtn.onclick = startGenerate; startGenerate
     }
     //document.getElementById('gen-btn').style.display = 'block';
-    document.getElementById('import-image').src = d.imageDataUrl;    
+    document.getElementById('import-image').src = d.imageDataUrl;
+    
     document.getElementById('import-style').innerText = d.stylePrompt;
     document.getElementById('import-title').innerText = d.title;
     document.getElementById('import-lyrics').innerText = d.lyrics;

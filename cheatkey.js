@@ -480,15 +480,16 @@ function ckSendToGenerate() {
   const savedStyle = waveSelect.value;
   waveSelect.value = 'none';
   ckDrawCanvas();
-  const imageDataUrl = canvas.toDataURL('image/png');
-  document.getElementById('import-image-clean').src = canvas.toDataURL('image/png');
+  const cleanImageDataUrl = canvas.toDataURL('image/png');
+  document.getElementById('import-image-clean').src = cleanImageDataUrl;
   
   waveSelect.value = savedStyle;
   ckDrawCanvas();
-  document.getElementById('import-image').src = canvas.toDataURL('image/png'); // 추가
+  const previewImageDataUrl = canvas.toDataURL('image/png');
+  document.getElementById('import-image').src = previewImageDataUrl;
 
   window.ckExportData = {
-    imageDataUrl: imageDataUrl,
+    imageDataUrl: cleanImageDataUrl,
     stylePrompt: document.getElementById('ck-sunoStyleText')?.innerText || '',
     lyrics: document.getElementById('ck-lyricsOutputText')?.innerText || '',
     youtubeData: window.ckYoutubeJson ? JSON.stringify(window.ckYoutubeJson) : document.getElementById('ck-youtubeOutputText')?.innerText || '',
