@@ -200,59 +200,33 @@ const waveSize = parseInt(document.getElementById('ck-waveSize')?.value || 40);
 
 if (waveStyle !== 'none') {
   // 드래그 위치 (없으면 기본값 하단 중앙)
-  const wx = window.ckWaveX !== undefined ? window.ckWaveX : W / 2;
-  const wy = window.ckWaveY !== undefined ? window.ckWaveY : H * 0.82;
+  // 웨이브폼 드래그
+function ckInitWaveDrag() {
+  const canvas = document.getElementById('ck-thumbnailCanvas');
+  if (!canvas) return;
 
-  ctx.save();
-  ctx.globalAlpha = 0.85;
+  let dragging = false;
 
-  const barCount = 40;
-  const barW = waveSize * 0.08;
-  const totalW = barCount * barW * 2.2;
-  const startX = wx - totalW / 2;
+  canvas.addEventListener('mousedown', e => {
+    if (document.getElementById('ck-waveStyle')?.value === 'none') return;
+    dragging = true;
+    updateWavePos(e);
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    updateWavePos(e);
+    ckDrawCanvas();
+  });
+  canvas.addEventListener('mouseup', () => { dragging = false; });
+  canvas.addEventListener('mouseleave', () => { dragging = false; });
 
-  // 애니메이션용 시드 (정적이므로 고정 패턴)
-  const seed = [0.6,0.4,0.8,0.3,0.9,0.5,0.7,0.2,1.0,0.6,0.4,0.8,0.3,0.9,0.5,0.7,0.2,1.0,0.6,0.4,
-                0.8,0.3,0.9,0.5,0.7,0.2,1.0,0.6,0.4,0.8,0.3,0.9,0.5,0.7,0.2,1.0,0.6,0.4,0.8,0.3];
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-  ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  ctx.lineWidth = 1.5;
-
-  if (waveStyle === 'bar') {
-    for (let i = 0; i < barCount; i++) {
-      const bh = seed[i] * waveSize;
-      const x = startX + i * barW * 2.2;
-      ctx.fillRect(x, wy - bh, barW, bh);
-    }
-  } else if (waveStyle === 'mirror') {
-    for (let i = 0; i < barCount; i++) {
-      const bh = seed[i] * waveSize * 0.5;
-      const x = startX + i * barW * 2.2;
-      ctx.fillRect(x, wy - bh, barW, bh * 2);
-    }
-  } else if (waveStyle === 'line') {
-    ctx.beginPath();
-    for (let i = 0; i < barCount; i++) {
-      const x = startX + i * (totalW / barCount);
-      const y = wy - seed[i] * waveSize * 0.5;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  } else if (waveStyle === 'dot') {
-    for (let i = 0; i < barCount; i++) {
-      const x = startX + i * barW * 2.2;
-      const y = wy - seed[i] * waveSize * 0.5;
-      ctx.beginPath();
-      ctx.arc(x + barW / 2, y, barW * 0.6, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  function updateWavePos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width / (window.devicePixelRatio || 1);
+    const scaleY = canvas.height / rect.height / (window.devicePixelRatio || 1);
+    window.ckWaveX = (e.clientX - rect.left) * scaleX;
+    window.ckWaveY = (e.clientY - rect.top) * scaleY;
   }
-
-  ctx.restore();
-}
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
 }
 
 
@@ -511,3 +485,7 @@ window.pushData = function(jsonInput) {
     window.ckWaveY = (e.clientY - rect.top) * scaleY;
   }
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  ckInitWaveDrag();
+});
