@@ -405,6 +405,19 @@
                   </div>
                   <canvas id="ck-thumbnailCanvas" width="1280" height="720" style="width:100%;height:auto;display:block;"></canvas>
                 </div>
+                <!-- 웨이브폼 컨트롤 -->
+                <div style="margin-top:10px;display:flex;align-items:center;gap:10px;">
+                  <label style="font-size:12px;color:#94a3b8;white-space:nowrap;">웨이브폼</label>
+                  <select id="ck-waveStyle" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:4px 8px;font-size:12px;">
+                    <option value="none">없음</option>
+                    <option value="bar">막대형 (Bar)</option>
+                    <option value="line">선형 (Line)</option>
+                    <option value="dot">점형 (Dot)</option>
+                    <option value="mirror">대칭형 (Mirror)</option>
+                  </select>
+                  <label style="font-size:12px;color:#94a3b8;white-space:nowrap;">크기</label>
+                  <input type="range" id="ck-waveSize" min="10" max="100" value="40" style="width:80px;">
+                </div>
                 <!-- 컨트롤 -->
                 <div style="display:flex;flex-direction:column;gap:8px;">
                   <div>
