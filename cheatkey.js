@@ -532,34 +532,5 @@ window.pushData = function(jsonInput) {
  
 }
 
-// 웨이브폼 드래그
-(function() {
-  let dragging = false;
-  const canvas = document.getElementById('ck-thumbnailCanvas');
-  if (!canvas) return;
 
-  canvas.addEventListener('mousedown', e => {
-    dragging = true;
-    updateWavePos(e);
-  });
-  canvas.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    updateWavePos(e);
-    ckDrawCanvas();
-  });
-  canvas.addEventListener('mouseup', () => { dragging = false; });
-  canvas.addEventListener('mouseleave', () => { dragging = false; });
-
-  function updateWavePos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width / (window.devicePixelRatio || 1);
-    const scaleY = canvas.height / rect.height / (window.devicePixelRatio || 1);
-    window.ckWaveX = (e.clientX - rect.left) * scaleX;
-    window.ckWaveY = (e.clientY - rect.top) * scaleY;
-  }
-  document.addEventListener('DOMContentLoaded', () => {
-  ckInitWaveDrag();
-  });
-
-})();
 
