@@ -1,9 +1,7 @@
 // ─── 페이지 전환 ───
 
 
-// ─── Google Drive 업로드 ───
-//const GOOGLE_CLIENT_ID = '1069291813254-et226k3b26bl4bv8pft2efhfj4mqouvo.apps.googleusercontent.com';
-//const DRIVE_FOLDER_ID = '1sP3bhmhcFBDIQ7vV45TZO44ktBCpe9Wt';
+
 
 let driveAccessToken = null;
 
@@ -103,11 +101,11 @@ function showPage(name, el) {
 
 }
 
-// ─── 프리셋 로드 ───
+// ─── 음원치트키 옵션(셀렉트밗) 로드 ───
 async function loadPresets() {
   try {
     const [presetsRes, refsRes] = await Promise.all([
-      fetch('./stylePresets.json'),
+      fetch('/api/sunoOptions'),
       fetch('./references.json')
     ]);
 
