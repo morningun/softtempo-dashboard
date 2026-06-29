@@ -474,8 +474,7 @@ async function ckGenerate() {
 
 function ckSendToGenerate() {
   // 캔버스 이미지 데이터 저장
-  const canvas = document.getElementById('ck-thumbnailCanvas');
-  const canvas = document.getElementById('ck-thumbnailCanvas');
+  const canvas = document.getElementById('ck-thumbnailCanvas');  
   const rect = canvas.getBoundingClientRect();
   const scaleX = 1280 / rect.width;
   const scaleY = 720 / rect.height;
