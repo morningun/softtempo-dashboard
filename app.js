@@ -40,7 +40,8 @@ async function uploadImageToDrive() {
     return;
   }
 
-  const base64Data = window.ckExportData.imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
+  const cleanSrc = document.getElementById('import-image-clean').src;
+  const base64Data = cleanSrc.replace(/^data:image\/\w+;base64,/, '');
   const byteArray = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
   const blob = new Blob([byteArray], { type: 'image/png' });
 
@@ -93,6 +94,7 @@ function showPage(name, el) {
     }
     //document.getElementById('gen-btn').style.display = 'block';
     document.getElementById('import-image').src = d.imageDataUrl;
+    document.getElementById('import-image-clean').src = imageDataUrl;
     document.getElementById('import-style').innerText = d.stylePrompt;
     document.getElementById('import-title').innerText = d.title;
     document.getElementById('import-lyrics').innerText = d.lyrics;
