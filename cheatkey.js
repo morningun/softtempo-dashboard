@@ -489,8 +489,8 @@ function ckSendToGenerate() {
   document.getElementById('import-image').src = previewImageDataUrl;
 
   window.ckExportData = {
-    imageDataUrl: document.getElementById('import-image-clean')?.src || "",
-    previewImageDataUrl: document.getElementById('import-image')?.src || "",
+    imageDataUrl: previewImageDataUrl,
+    previewImageDataUrl: cleanImageDataUrl,
     stylePrompt: document.getElementById('ck-sunoStyleText')?.innerText || '',
     lyrics: document.getElementById('ck-lyricsOutputText')?.innerText || '',
     youtubeData: window.ckYoutubeJson ? JSON.stringify(window.ckYoutubeJson) : document.getElementById('ck-youtubeOutputText')?.innerText || '',
@@ -522,9 +522,8 @@ window.pushData = function(jsonInput) {
     stylePrompt: jsonInput.style,
     lyrics: jsonInput.lyrics,
     youtubeData: jsonInput.youtube,
-    imageDataUrl: document.getElementById('import-image-clean')?.src || "",
-    previewImageDataUrl: document.getElementById('import-image')?.src || "",
-    waveform: jsonInput.waveform || { style: 'none' }
+    imageDataUrl: document.getElementById('ck-thumbnailCanvas') ? 
+                  document.getElementById('ck-thumbnailCanvas').toDataURL('image/png') : ""
   };
 
   if (typeof showPage === 'function') {
