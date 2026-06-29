@@ -94,7 +94,7 @@ function showPage(name, el) {
     }
     //document.getElementById('gen-btn').style.display = 'block';
     document.getElementById('import-image').src = d.imageDataUrl;
-    
+    document.getElementById('import-image-clean').src = d.previewImageDataUrl;
     document.getElementById('import-style').innerText = d.stylePrompt;
     document.getElementById('import-title').innerText = d.title;
     document.getElementById('import-lyrics').innerText = d.lyrics;

@@ -521,7 +521,7 @@ window.pushData = function(jsonInput) {
     stylePrompt: jsonInput.style,
     lyrics: jsonInput.lyrics,
     youtubeData: jsonInput.youtube,
-     imageDataUrl: document.getElementById('import-image-clean')?.src || "",
+    imageDataUrl: document.getElementById('import-image-clean')?.src || "",
     previewImageDataUrl: document.getElementById('import-image')?.src || "",
     waveform: jsonInput.waveform || { style: 'none' }
   };
