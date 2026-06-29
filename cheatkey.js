@@ -489,8 +489,8 @@ function ckSendToGenerate() {
   document.getElementById('import-image').src = previewImageDataUrl;
 
   window.ckExportData = {
-    imageDataUrl: previewImageDataUrl,
-    previewImageDataUrl: cleanImageDataUrl,
+    imageDataUrl: cleanImageDataUrl,
+    previewImageDataUrl: previewImageDataUrl,
     stylePrompt: document.getElementById('ck-sunoStyleText')?.innerText || '',
     lyrics: document.getElementById('ck-lyricsOutputText')?.innerText || '',
     youtubeData: window.ckYoutubeJson ? JSON.stringify(window.ckYoutubeJson) : document.getElementById('ck-youtubeOutputText')?.innerText || '',
