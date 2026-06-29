@@ -280,9 +280,7 @@ function ckInitWaveDrag() {
     window.ckWaveX = (e.clientX - rect.left) * scaleX;
     window.ckWaveY = (e.clientY - rect.top) * scaleY;
   }
-
-
-  ctx.restore();
+  
 }
 
 
