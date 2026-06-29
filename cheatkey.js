@@ -497,7 +497,7 @@ function ckSendToGenerate() {
     title: document.getElementById('ck-songTitle')?.value || '',
     waveform: {
       style: savedStyle || 'none',
-      size: parseInt(document.getElementById('ck-waveSize')?.value || 40),
+      size: Math.round(parseInt(document.getElementById('ck-waveSize')?.value || 40) * (1280 / canvas.width)),
       x: window.ckWaveX ? Math.round(window.ckWaveX * (1280 / canvas.width)) : null,
       y: window.ckWaveY ? Math.round(window.ckWaveY * (720 / canvas.height)) : null,
     }
