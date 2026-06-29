@@ -21,9 +21,9 @@ module.exports = async function handler(req, res) {
         language: language || 'ko',
         r2_key: r2Key,
         wave_style: waveStyle || 'none',
-        wave_size: waveSize || 40,
-        wave_x: waveX || null,
-        wave_y: waveY || null,
+        wave_size: String(waveSize || 40),
+        wave_x: waveX ? String(waveX) : '',
+        wave_y: waveY ? String(waveY) : '',
       }
     });
 
