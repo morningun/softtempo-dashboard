@@ -1,27 +1,30 @@
-const { Client } = require('@notionhq/client');
-
-const notion = new Client({ auth: process.env.NOTION_API_KEY});
-const DB_ID = process.env.NOTION_OPTIONS_DATABASE_ID;
-
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   try {
-    const response = await notion.databases.query({
-      database_id: DB_ID,
-      filter: {
-        property: 'active',
-        checkbox: { equals: true }
+    const response = await fetch(`https://api.notion.com/v1/databases/${process.env.NOTION_OPTIONS_DATABASE_ID}/query`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
+        'Notion-Version': '2022-06-28',
+        'Content-Type': 'application/json'
       },
-      sorts: [
-        { property: 'layer', direction: 'ascending' },
-        { property: 'order', direction: 'ascending' }
-      ]
+      body: JSON.stringify({
+        filter: {
+          property: 'active',
+          checkbox: { equals: true }
+        },
+        sorts: [
+          { property: 'layer', direction: 'ascending' },
+          { property: 'order', direction: 'ascending' }
+        ]
+      })
     });
 
+    const data = await response.json();
     const result = {};
 
-    for (const page of response.results) {
+    for (const page of data.results) {
       const props = page.properties;
 
       const layer = props.layer?.title?.[0]?.plain_text;
