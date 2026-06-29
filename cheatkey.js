@@ -194,13 +194,10 @@ function ckDrawCanvas() {
 
 
   ctx.shadowBlur = 0;
-  // 웨이브폼 그리기
-const waveStyle = document.getElementById('ck-waveStyle')?.value || 'none';
-const waveSize = parseInt(document.getElementById('ck-waveSize')?.value || 40);
-
-if (waveStyle !== 'none') {
-  // 드래그 위치 (없으면 기본값 하단 중앙)
-  // 웨이브폼 드래그
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+}
+// 웨이브폼 드래그
 function ckInitWaveDrag() {
   const canvas = document.getElementById('ck-thumbnailCanvas');
   if (!canvas) return;
@@ -227,8 +224,10 @@ function ckInitWaveDrag() {
     window.ckWaveX = (e.clientX - rect.left) * scaleX;
     window.ckWaveY = (e.clientY - rect.top) * scaleY;
   }
-}
 
+
+  ctx.restore();
+}
 
 function ckInsertVisualPrompt() {
   const el = document.getElementById('ck-imagePrompt');
@@ -485,7 +484,3 @@ window.pushData = function(jsonInput) {
     window.ckWaveY = (e.clientY - rect.top) * scaleY;
   }
 })();
-
-document.addEventListener('DOMContentLoaded', () => {
-  ckInitWaveDrag();
-});
