@@ -485,6 +485,7 @@ function ckSendToGenerate() {
   
   waveSelect.value = savedStyle;
   ckDrawCanvas();
+  document.getElementById('import-image').src = canvas.toDataURL('image/png'); // 추가
 
   window.ckExportData = {
     imageDataUrl: imageDataUrl,
