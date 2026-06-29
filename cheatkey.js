@@ -484,15 +484,6 @@ function ckSendToGenerate() {
   console.log('전송 데이터:', window.ckExportData);  
 }
 
-/// 테스트 구역 
-window.addEventListener('DOMContentLoaded', () => {
-  const savedData = localStorage.getItem('my_test_json');
-  if (savedData) {
-    const parsed = JSON.parse(savedData);
-    // 새로고침되어도 자동으로 콘텐츠 생성 카드를 열고 값을 유지
-    pushData(parsed); 
-  }
-});
 
 // 콘솔 전용 치트키 배달 함수 최적화 버전
 window.pushData = function(jsonInput) {
