@@ -539,3 +539,7 @@ window.pushData = function(jsonInput) {
     window.ckWaveY = (e.clientY - rect.top) * scaleY;
   }
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  ckInitWaveDrag();
+});
