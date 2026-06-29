@@ -203,6 +203,10 @@ async function startGenerate() {
         stylPrompt: d.stylePrompt || '',
         lyrics: d.lyrics || '',
         language: 'ko',
+        waveStyle: d.waveform?.style || 'none',
+        waveSize: d.waveform?.size || 40,
+        waveX: d.waveform?.x || null,
+        waveY: d.waveform?.y || null,
         youtubeData: d.youtubeData || '',
       })
     });

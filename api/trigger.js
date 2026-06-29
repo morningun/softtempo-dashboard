@@ -5,7 +5,8 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { fileId, title, stylPrompt, lyrics, language } = req.body;
+    const { fileId, title, stylPrompt, lyrics, language, waveStyle, waveSize, waveX, waveY } = req.body;
+
 
       const r2Key = `videos/latest.mp4`;
 
@@ -19,6 +20,10 @@ module.exports = async function handler(req, res) {
         lyrics: lyrics || '',
         language: language || 'ko',
         r2_key: r2Key,
+        wave_style: waveStyle || 'none',
+        wave_size: waveSize || 40,
+        wave_x: waveX || null,
+        wave_y: waveY || null,
       }
     });
 

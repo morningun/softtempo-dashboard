@@ -481,6 +481,12 @@ function ckSendToGenerate() {
     lyrics: document.getElementById('ck-lyricsOutputText')?.innerText || '',
     youtubeData: window.ckYoutubeJson ? JSON.stringify(window.ckYoutubeJson) : document.getElementById('ck-youtubeOutputText')?.innerText || '',
     title: document.getElementById('ck-songTitle')?.value || '',
+    waveform: {
+    style: document.getElementById('ck-waveStyle')?.value || 'none',
+    size: parseInt(document.getElementById('ck-waveSize')?.value || 40),
+    x: window.ckWaveX || null,
+    y: window.ckWaveY || null,
+    } 
   };
 
   // localStorage에 저장

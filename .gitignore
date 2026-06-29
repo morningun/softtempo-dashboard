@@ -1,2 +1,6 @@
 .vercel
 .env*
+
+
+
+seed_notion_options.py
