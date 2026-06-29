@@ -8,7 +8,9 @@ module.exports = async function handler(req, res) {
     const { fileId, title, stylPrompt, lyrics, language, waveStyle, waveSize, waveX, waveY } = req.body;
 
 
-      const r2Key = `videos/latest.mp4`;
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/[-:T]/g, '').slice(0, 14);
+      const r2Key = `videos/${timestamp}.mp4`;
 
 
     const payload = JSON.stringify({
