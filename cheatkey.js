@@ -475,6 +475,12 @@ async function ckGenerate() {
 function ckSendToGenerate() {
   // 캔버스 이미지 데이터 저장
   const canvas = document.getElementById('ck-thumbnailCanvas');
+  const canvas = document.getElementById('ck-thumbnailCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = 1280 / rect.width;
+  const scaleY = 720 / rect.height;
+
+
   window.ckExportData = {
     imageDataUrl: canvas.toDataURL('image/png'),
     stylePrompt: document.getElementById('ck-sunoStyleText')?.innerText || '',
@@ -482,11 +488,11 @@ function ckSendToGenerate() {
     youtubeData: window.ckYoutubeJson ? JSON.stringify(window.ckYoutubeJson) : document.getElementById('ck-youtubeOutputText')?.innerText || '',
     title: document.getElementById('ck-songTitle')?.value || '',
     waveform: {
-    style: document.getElementById('ck-waveStyle')?.value || 'none',
-    size: parseInt(document.getElementById('ck-waveSize')?.value || 40),
-    x: window.ckWaveX || null,
-    y: window.ckWaveY || null,
-    } 
+      style: document.getElementById('ck-waveStyle')?.value || 'none',
+      size: parseInt(document.getElementById('ck-waveSize')?.value || 40),
+      x: window.ckWaveX ? Math.round(window.ckWaveX * scaleX) : null,
+      y: window.ckWaveY ? Math.round(window.ckWaveY * scaleY) : null,
+    }
   };
 
   // localStorage에 저장
