@@ -498,8 +498,8 @@ function ckSendToGenerate() {
     waveform: {
       style: savedStyle || 'none',
       size: parseInt(document.getElementById('ck-waveSize')?.value || 40),
-      x: window.ckWaveX ? Math.round(window.ckWaveX) : null,
-      y: window.ckWaveY ? Math.round(window.ckWaveY) : null,
+      x: window.ckWaveX ? Math.round(window.ckWaveX * (1280 / canvas.width)) : null,
+      y: window.ckWaveY ? Math.round(window.ckWaveY * (720 / canvas.height)) : null,
     }
   };
 
