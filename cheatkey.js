@@ -77,11 +77,12 @@ function ckSwitchTab(tab) {
 }
 
     function ckSetWavePosition(position) {
-    const canvas = document.getElementById('ck-thumbnailCanvas');
-    if (!canvas) return;
-    window.ckWaveX = canvas.width / 2;
-    window.ckWaveY = position === 'middle' ? canvas.height * 0.5 : canvas.height * 0.82;
-    ckDrawCanvas();
+      window.ckWavePositionPreset = position; // 'middle' 또는 'bottom' - 비율 기반 고정
+      const canvas = document.getElementById('ck-thumbnailCanvas');
+      if (!canvas) return;
+      window.ckWaveX = canvas.width / 2;
+      window.ckWaveY = position === 'middle' ? canvas.height * 0.5 : canvas.height * 0.82;
+      ckDrawCanvas();
     }
   
 
@@ -509,8 +510,8 @@ function ckSendToGenerate() {
     waveform: {
       style: savedStyle || 'none',
       size: 40, // 고정값
-      x: window.ckWaveX ? Math.round(window.ckWaveX * (1280 / canvas.width)) : null,
-      y: window.ckWaveY ? Math.round(window.ckWaveY * (720 / canvas.height)) : null,
+      x: 640, // 항상 가로 중앙 (1280 기준)
+      y: window.ckWavePositionPreset === 'middle' ? 360 : 590, // 1280x720 기준 중간(50%)/하단(82%)
     }
   };
 
