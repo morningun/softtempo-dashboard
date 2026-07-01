@@ -77,11 +77,14 @@ function ckSwitchTab(tab) {
 }
 
     function ckSetWavePosition(position) {
-      window.ckWavePositionPreset = position; // 'middle' 또는 'bottom' - 비율 기반 고정
-      const canvas = document.getElementById('ck-thumbnailCanvas');
-      if (!canvas) return;
-      window.ckWaveX = canvas.width / 2;
-      window.ckWaveY = position === 'middle' ? canvas.height * 0.5 : canvas.height * 0.82;
+        window.ckWavePositionPreset = position; // 'middle' 또는 'bottom' - 비율 기반 고정
+        const canvas = document.getElementById('ck-thumbnailCanvas');
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const W = rect.width;
+        const H = rect.width * 9 / 16;
+        window.ckWaveX = W / 2;
+        window.ckWaveY = position === 'middle' ? H * 0.5 : H * 0.82;
       ckDrawCanvas();
     }
   
