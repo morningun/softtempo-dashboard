@@ -72,17 +72,20 @@ function ckSwitchTab(tab) {
         ckInitWaveDrag();
         window.ckWaveDragInit = true;
       }*/
-
-      function ckSetWavePosition(position) {
-      const canvas = document.getElementById('ck-thumbnailCanvas');
-      if (!canvas) return;
-      window.ckWaveX = canvas.width / 2;
-      window.ckWaveY = position === 'middle' ? canvas.height * 0.5 : canvas.height * 0.82;
-      ckDrawCanvas();
-}
     }, 50);
   }
 }
+
+    function ckSetWavePosition(position) {
+    const canvas = document.getElementById('ck-thumbnailCanvas');
+    if (!canvas) return;
+    window.ckWaveX = canvas.width / 2;
+    window.ckWaveY = position === 'middle' ? canvas.height * 0.5 : canvas.height * 0.82;
+    ckDrawCanvas();
+    }
+  
+
+
 
 // ─── 복사 ───
 function ckCopy(elementId) {
