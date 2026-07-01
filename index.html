@@ -416,7 +416,9 @@
                     <option value="mirror">대칭형 (Mirror)</option>
                   </select>
                   <label style="font-size:12px;color:#94a3b8;white-space:nowrap;">크기</label>
-                  <input type="range" id="ck-waveSize" min="10" max="100" value="40" style="width:80px;">
+                  <input type="range" id="ck-waveSize" min="10" max="100" value="40" style="width:80px; display:none;">
+                  <button type="button" onclick="ckSetWavePosition('middle')" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">중간</button>
+                  <button type="button" onclick="ckSetWavePosition('bottom')" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">하단</button>
                 </div>
                 </div>         
                 <!-- 컨트롤 -->

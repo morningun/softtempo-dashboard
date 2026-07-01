@@ -68,10 +68,18 @@ function ckSwitchTab(tab) {
    if (tab === 'thumbnail') {
     setTimeout(() => {
       ckDrawCanvas();
-      if (!window.ckWaveDragInit) {
+      /*if (!window.ckWaveDragInit) {
         ckInitWaveDrag();
         window.ckWaveDragInit = true;
-      }
+      }*/
+
+      function ckSetWavePosition(position) {
+      const canvas = document.getElementById('ck-thumbnailCanvas');
+      if (!canvas) return;
+      window.ckWaveX = canvas.width / 2;
+      window.ckWaveY = position === 'middle' ? canvas.height * 0.5 : canvas.height * 0.82;
+      ckDrawCanvas();
+}
     }, 50);
   }
 }
@@ -204,7 +212,7 @@ function ckDrawCanvas() {
   ctx.shadowBlur = 0;
 // 웨이브폼 그리기
   const waveStyle = document.getElementById('ck-waveStyle')?.value || 'none';
-  const waveSize = parseInt(document.getElementById('ck-waveSize')?.value || 40);
+  const waveSize = 40; // 고정값 (슬라이더 제거됨)
 
   if (waveStyle !== 'none') {
     const wx = window.ckWaveX !== undefined ? window.ckWaveX : W / 2;
@@ -497,7 +505,7 @@ function ckSendToGenerate() {
     title: document.getElementById('ck-songTitle')?.value || '',
     waveform: {
       style: savedStyle || 'none',
-      size: Math.round(parseInt(document.getElementById('ck-waveSize')?.value || 40) * (1280 / canvas.width)),
+      size: 40, // 고정값
       x: window.ckWaveX ? Math.round(window.ckWaveX * (1280 / canvas.width)) : null,
       y: window.ckWaveY ? Math.round(window.ckWaveY * (720 / canvas.height)) : null,
     }
