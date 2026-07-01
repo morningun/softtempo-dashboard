@@ -70,6 +70,7 @@ export async function insertPromptToNotion(musicData) {
           ]
         },
         // 8. 최종 프롬프트 (Rich text 타입)
+        // 8. 최종 프롬프트 (Rich text 타입)
         '🔥 최종 프롬프트': {
           rich_text: [
             {
@@ -80,8 +81,31 @@ export async function insertPromptToNotion(musicData) {
         // 9. 내 평가 (Select 타입 - 기본값 설정)
         '⭐ 내 평가': {
           select: { name: '☆☆☆☆☆' } // 처음 등록 시에는 빈 별점으로 세팅
+        },
+        // 10. Persona ID (Rich text 타입)
+        '🎭 Persona ID': {
+          rich_text: [
+            {
+              text: { content: musicData.personaId || '' }
+            }
+          ]
+        },
+        // 11. Audio ID (Rich text 타입)
+        '🆔 Audio ID': {
+          rich_text: [
+            {
+              text: { content: musicData.audioId || '' }
+            }
+          ]
+        },
+        // 12. Task ID (Rich text 타입)
+        '📋 Task ID': {
+          rich_text: [
+            {
+              text: { content: musicData.taskId || '' }
+            }
+          ]
         }
-      }
     });
 
     console.log(`🎉 [${musicData.referenceTitle}] 노션 DB 등록 성공! (Page ID: ${response.id})`);
@@ -89,6 +113,64 @@ export async function insertPromptToNotion(musicData) {
 
   } catch (error) {
     console.error('❌ 노션 API 통신 중 에러 발생:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * 내가 생성한(Suno) 음악 결과를 프리셋으로 저장하는 함수
+ * @param {Object} genData - 생성 결과 데이터
+ */
+export async function saveGeneratedPreset(genData) {
+  try {
+    const response = await notion.pages.create({
+      parent: {
+        database_id: NOTION_DATABASE_ID,
+      },
+      properties: {
+        '🎵 레퍼런스 곡명': {
+          title: [
+            { text: { content: genData.title || '이름 없는 생성곡' } }
+          ]
+        },
+        '🎹 장르 (Genre)': {
+          multi_select: (genData.genres || []).map(genreName => ({ name: genreName }))
+        },
+        '⏱️ 템포 (BPM)': {
+          rich_text: [{ text: { content: genData.bpm || '' } }]
+        },
+        '🎸 악기 구성': {
+          rich_text: [{ text: { content: genData.instruments || '' } }]
+        },
+        '🎙️ 보컬 질감': {
+          rich_text: [{ text: { content: genData.vocal || '' } }]
+        },
+        '🌌 무드 & 감성': {
+          rich_text: [{ text: { content: genData.mood || '' } }]
+        },
+        '🔥 최종 프롬프트': {
+          rich_text: [{ text: { content: genData.fullPrompt || '' } }]
+        },
+        '🎭 Persona ID': {
+          rich_text: [{ text: { content: genData.personaId || '' } }]
+        },
+        '🆔 Audio ID': {
+          rich_text: [{ text: { content: genData.audioId || '' } }]
+        },
+        '📋 Task ID': {
+          rich_text: [{ text: { content: genData.taskId || '' } }]
+        },
+        '📌 출처': {
+          select: { name: '직접 생성' }
+        }
+      }
+    });
+
+    console.log(`🎉 [${genData.title}] 생성 프리셋 저장 성공! (Page ID: ${response.id})`);
+    return { success: true, pageId: response.id };
+
+  } catch (error) {
+    console.error('❌ 생성 프리셋 저장 중 에러:', error);
     return { success: false, error: error.message };
   }
 }
