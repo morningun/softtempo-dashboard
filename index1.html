@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suno 스타일 프리셋</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --text: #1b1f27; --muted: #6b7280;
+    --line: #d9dde4; --accent: #3b5bdb; --out-bg: #eef2ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161b; --card: #1d2027; --text: #e8eaf0; --muted: #9aa1ae;
+            --line: #323744; --accent: #7c9cff; --out-bg: #232a44; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px 16px; background: var(--bg); color: var(--text);
+         font-family: "Pretendard", "Noto Sans KR", system-ui, sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .row { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: center; margin-bottom: 12px; }
+  label { font-size: 14px; color: var(--muted); }
+  select { width: 100%; padding: 10px; font-size: 14px; border: 1px solid var(--line);
+           border-radius: 6px; background: var(--card); color: var(--text); }
+  select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .out { margin-top: 20px; }
+  .out h2 { font-size: 15px; margin: 0 0 6px; }
+  .box { background: var(--out-bg); border: 1px solid var(--line); border-radius: 6px;
+         padding: 12px; font-size: 14px; line-height: 1.6; white-space: pre-wrap;
+         word-break: break-word; min-height: 48px; }
+  .box.empty { color: var(--muted); }
+  button { margin-top: 10px; padding: 9px 16px; font-size: 14px; border: 0; border-radius: 6px;
+           background: var(--accent); color: #fff; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); margin-left: 6px; }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; gap: 4px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Suno 스타일 프리셋</h1>
+  <div class="card">
+    <div id="selects"></div>
+
+    <div class="out">
+      <h2>스타일 프롬프트 (Style of Music)</h2>
+      <div id="styleOut" class="box empty">항목을 선택하면 여기에 표시됩니다</div>
+      <button id="copyStyle">스타일 복사</button>
+      <button id="reset" class="ghost">초기화</button>
+    </div>
+
+    <div class="out">
+      <h2>가사 구조 (Lyrics 템플릿)</h2>
+      <div id="structOut" class="box"></div>
+      <button id="copyStruct">구조 복사</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  "stylePresets": {
+    "layer_1_genre": [
+      {"label": "로파이, 앰비언트", "value": "lofi, ambient"},
+      {"label": "팝, 재즈 사운드, 그루브", "value": "pop, jazz, groove"},
+      {"label": "인디 팝, 로파이", "value": "indie pop, lofi"},
+      {"label": "알앤비, 재즈, 그루브", "value": "rnb, jazz, groove"},
+      {"label": "제이록(J-Rock), 록, 인디 록", "value": "j-rock, rock, indie rock"},
+      {"label": "한국형 발라드(K-Ballad)", "value": "k-ballad, ballad"}
+    ],
+    "layer_2_bpm": [
+      {"label": "80 BPM (느린 템포)", "value": "80 BPM slow tempo"},
+      {"label": "90 BPM (미디엄 느린 템포)", "value": "90 BPM medium slow tempo"},
+      {"label": "100 BPM (미디엄 템포)", "value": "100 BPM medium tempo"},
+      {"label": "110 BPM (미디엄 빠른 템포)", "value": "110 BPM medium fast tempo"},
+      {"label": "130 BPM (빠른 템포)", "value": "130 BPM fast tempo"},
+      {"label": "150 BPM (매우 빠른 템포 - 제이록 추천)", "value": "150 BPM very fast tempo"}
+    ],
+    "layer_3_instruments": [
+      {"label": "부드러운 어쿠스틱 기타, 감미로운 피아노, 잔잔한 비트, 드럼 필수", "value": "soft acoustic guitar, sweet piano, gentle beats, drums"},
+      {"label": "피아노, 통통 튀는 드럼, 중독성 있는 멜로디 라인", "value": "piano, bouncy drums, catchy melody line"},
+      {"label": "어쿠스틱 기타, 머니코드, 드럼, 아날로그 따뜻한 질감", "value": "acoustic guitar, money chords, drums, warm analog texture"},
+      {"label": "일렉 기타, 드럼, 그루비한 멜로디, 감미로운 선율", "value": "electric guitar, drums, groovy melody, sweet tune"},
+      {"label": "묵직하고 강렬한 드럼, 일렉트릭 기타, 펑크 록 스타일, 신스웨이브", "value": "heavy drums, electric guitar, punk rock style, synthwave"},
+      {"label": "선명한 악기 톤, 슬로우 템포, 잔잔한 멜로디, 로파이 팝록 일렉기타, 드럼", "value": "clear instrument tone, slow tempo, gentle melody, lofi pop rock electric guitar, drums"}
+    ],
+    "layer_4_vocal": [
+      {"label": "감미로운 남성 보컬, 따뜻한 톤", "value": "sweet male vocal, warm tone"},
+      {"label": "밝은 여성 목소리, 칠(Chill)한 톤", "value": "bright female voice, chill tone"},
+      {"label": "로파이 감성 여성 보컬, 에코 효과", "value": "lofi female vocal, echo effect"},
+      {"label": "맑고 선명한 여성 보컬", "value": "clear bright female vocal"},
+      {"label": "파워풀하고 선명한 여성 보컬", "value": "powerful clear female vocal"},
+      {"label": "에너지 넘치는 남성 보컬", "value": "energetic male vocal"}
+    ],
+    "layer_5_mood": [
+      {"label": "포근함, 차분함, 리버브(잔향공간감) 있음", "value": "warm, calm, with reverb"},
+      {"label": "밝고 경쾌함, 리버브 없음(선명함 고수)", "value": "bright, upbeat, no reverb, crisp"},
+      {"label": "테이프 질감, 아련하고 노스탤지어 감성", "value": "tape texture, hazy nostalgic feeling"},
+      {"label": "어쿠스틱, 칠(Chill)한 휴식 분위기", "value": "acoustic, chill relaxing atmosphere"},
+      {"label": "장난스럽고 신나는, 업비트 일렉트로닉, 댄스 팝", "value": "playful, exciting, upbeat electronic, dance pop"}
+    ],
+    "layer_6_language": [
+      {"label": "한국어", "value": "Korean"},
+      {"label": "영어", "value": "English"},
+      {"label": "일본어", "value": "Japanese"},
+      {"label": "프랑스어", "value": "French"},
+      {"label": "연주곡 (보컬 없음)", "value": "Instrumental (No Vocal)"}
+    ],
+    "layer_7_thumbnail": [
+      {"label": "자동 (AI 생성)", "value": "auto"},
+      {"label": "수동 (Drive 폴더)", "value": "manual"}
+    ],
+    "system_6_timeline": {
+      "vocal_control": "pure vocal track, no ad-libs, no humming, clear pronunciation",
+      "structure": ["[intro]","[verse]","[chorus]","[break]","[verse]","[bridge]","[outro]"]
+    }
+  }
+};
+
+const LAYERS = [
+  ["layer_1_genre", "장르"],
+  ["layer_2_bpm", "BPM"],
+  ["layer_3_instruments", "악기"],
+  ["layer_4_vocal", "보컬"],
+  ["layer_5_mood", "분위기"],
+  ["layer_6_language", "언어"],
+  ["layer_7_thumbnail", "썸네일"]
+];
+// 썸네일은 Suno 스타일 프롬프트에 넣지 않음
+const IN_PROMPT = LAYERS.slice(0, 6).map(l => l[0]);
+
+const P = DATA.stylePresets;
+const selectsEl = document.getElementById("selects");
+const styleOut = document.getElementById("styleOut");
+const structOut = document.getElementById("structOut");
+
+LAYERS.forEach(([key, name]) => {
+  const row = document.createElement("div");
+  row.className = "row";
+  const label = document.createElement("label");
+  label.textContent = name;
+  label.htmlFor = key;
+  const sel = document.createElement("select");
+  sel.id = key;
+  sel.innerHTML = '<option value="">선택 안 함</option>' +
+    P[key].map(o => `<option value="${o.value.replace(/"/g, "&quot;")}">${o.label}</option>`).join("");
+  sel.addEventListener("change", render);
+  row.append(label, sel);
+  selectsEl.appendChild(row);
+});
+
+function render() {
+  const parts = IN_PROMPT
+    .map(k => document.getElementById(k).value)
+    .filter(Boolean);
+  if (parts.length) {
+    parts.push(P.system_6_timeline.vocal_control);
+    styleOut.textContent = parts.join(", ");
+    styleOut.classList.remove("empty");
+  } else {
+    styleOut.textContent = "항목을 선택하면 여기에 표시됩니다";
+    styleOut.classList.add("empty");
+  }
+}
+structOut.textContent = P.system_6_timeline.structure.join("\n");
+
+async function copy(text, btn) {
+  const old = btn.textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = "복사됨"; }
+  catch { btn.textContent = "복사 실패"; }
+  setTimeout(() => btn.textContent = old, 1200);
+}
+document.getElementById("copyStyle").onclick = e => {
+  if (!styleOut.classList.contains("empty")) copy(styleOut.textContent, e.target);
+};
+document.getElementById("copyStruct").onclick = e => copy(structOut.textContent, e.target);
+document.getElementById("reset").onclick = () => {
+  LAYERS.forEach(([k]) => document.getElementById(k).value = "");
+  render();
+};
+render();
+</script>
+</body>
+</html>
